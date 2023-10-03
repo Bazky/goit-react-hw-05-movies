@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Link, Routes, Route } from 'react-router-dom';
-import { Cast } from '../Cast/Cast'; // Import komponentu Cast
-import { Reviews } from '../Reviews/Reviews'; // Import komponentu Reviews
+import {
+  Link,
+  useParams,
+  useNavigate,
+  Outlet,
+  Route,
+  Routes,
+} from 'react-router-dom';
+import Cast from '../Cast/Cast';
+import Reviews from '../Reviews/Reviews';
+import css from './MovieDetails.module.css';
 
-export const MovieDetails = () => {
+export default function MovieDetails() {
   const { movieId } = useParams();
   const [movieDetails, setMovieDetails] = useState({});
   const apiKey = '718f2a56dca2d55e08ad2e8b7789586d';
+  const navigate = useNavigate();
 
+  //   fetch fetch fetch
   useEffect(() => {
     axios
       .get(
@@ -23,15 +32,36 @@ export const MovieDetails = () => {
       });
   }, [movieId]);
 
+  // stała sprawdza czy poster_path jest zdefiniowane
+  const posterPath = movieDetails.poster_path
+    ? `https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`
+    : '';
+
   return (
     <div>
-      <h1>{movieDetails.title}</h1>
-      <p>{movieDetails.overview}</p>
-      <img
-        src={`https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`}
-        alt={movieDetails.title}
-      />
-
+      <button onClick={() => navigate(-1)}>Cofnij</button>
+      <div className={css.container}>
+        {posterPath && <img src={posterPath} alt={movieDetails.title} />}
+        {/* info info info */} {/* info info info */}
+        <h1>{movieDetails.title}</h1>
+        <p>
+          {movieDetails.release_date &&
+            `Rok: ${movieDetails.release_date.split('-')[0]}`}
+        </p>
+        <p>
+          {movieDetails.vote_average &&
+            `Ocena użytkowników: ${movieDetails.vote_average}`}
+        </p>
+        <p>{movieDetails.overview && `Opis: ${movieDetails.overview}`}</p>
+        <p>
+          {movieDetails.genres &&
+            `Gatunek: ${movieDetails.genres
+              .map(genre => genre.name)
+              .join(', ')}`}
+        </p>
+        {/* info info info */} {/* info info info */}
+      </div>
+      {/* nav nav nav */} {/* nav nav nav */}
       <nav>
         <ul>
           <li>
@@ -42,12 +72,12 @@ export const MovieDetails = () => {
           </li>
         </ul>
       </nav>
-
-      {/* Dodaj trasy dla komponentów Cast i Reviews */}
+      {/* nav nav nav */} {/* nav nav nav */}
       <Routes>
         <Route path="cast" element={<Cast />} />
         <Route path="reviews" element={<Reviews />} />
       </Routes>
+      <Outlet />
     </div>
   );
-};
+}

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-export const Reviews = () => {
+export default function Movies() {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState([]);
   const apiKey = '718f2a56dca2d55e08ad2e8b7789586d';
 
+  //   fetch fetch fetch
   useEffect(() => {
     axios
       .get(
@@ -33,4 +34,4 @@ export const Reviews = () => {
       </ul>
     </div>
   );
-};
+}
