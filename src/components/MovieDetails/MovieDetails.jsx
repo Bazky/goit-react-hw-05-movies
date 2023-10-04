@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  Link,
-  useParams,
-  useNavigate,
-  Outlet,
-  Route,
-  Routes,
-} from 'react-router-dom';
-import Cast from '../Cast/Cast';
-import Reviews from '../Reviews/Reviews';
+import { Link, useParams, useNavigate, Outlet } from 'react-router-dom';
 import css from './MovieDetails.module.css';
 
 export default function MovieDetails() {
@@ -71,13 +62,9 @@ export default function MovieDetails() {
             <Link to={`/movies/${movieId}/reviews`}>Recenzje</Link>
           </li>
         </ul>
+        <Outlet />
       </nav>
       {/* nav nav nav */} {/* nav nav nav */}
-      <Routes>
-        <Route path="cast" element={<Cast />} />
-        <Route path="reviews" element={<Reviews />} />
-      </Routes>
-      <Outlet />
     </div>
   );
 }
