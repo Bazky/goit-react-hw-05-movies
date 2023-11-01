@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link, useParams, useNavigate, Outlet } from 'react-router-dom';
+import axios from 'axios';
 import css from './MovieDetails.module.css';
+import { apiKey } from 'api/themoviedb';
+import { PropTypes } from 'prop-types';
 
 export default function MovieDetails() {
   const { movieId } = useParams();
   const [movieDetails, setMovieDetails] = useState({});
-  const apiKey = '718f2a56dca2d55e08ad2e8b7789586d';
   const navigate = useNavigate();
 
-  //   fetch fetch fetch
   useEffect(() => {
     axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=en-US`
-      )
+      .get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`)
       .then(response => {
         setMovieDetails(response.data);
       })
@@ -25,35 +23,40 @@ export default function MovieDetails() {
 
   // stała sprawdza czy poster_path jest zdefiniowane
   const posterPath = movieDetails.poster_path
-    ? `https://image.tmdb.org/t/p/w500/${movieDetails.poster_path}`
+    ? `https://image.tmdb.org/t/p/w200/${movieDetails.poster_path}`
     : '';
 
   return (
     <div>
-      <button onClick={() => navigate(-1)}>Cofnij</button>
+      <button className={css.button} onClick={() => navigate(-1)}>
+        Cofnij
+      </button>
       <div className={css.container}>
         {posterPath && <img src={posterPath} alt={movieDetails.title} />}
         {/* info info info */} {/* info info info */}
-        <h1>{movieDetails.title}</h1>
-        <p>
-          {movieDetails.release_date &&
-            `Rok: ${movieDetails.release_date.split('-')[0]}`}
-        </p>
-        <p>
-          {movieDetails.vote_average &&
-            `Ocena użytkowników: ${movieDetails.vote_average}`}
-        </p>
-        <p>{movieDetails.overview && `Opis: ${movieDetails.overview}`}</p>
-        <p>
-          {movieDetails.genres &&
-            `Gatunek: ${movieDetails.genres
-              .map(genre => genre.name)
-              .join(', ')}`}
-        </p>
+        <div className={css.info}>
+          <div className={css.info__title}>
+            <h1>{movieDetails.title}</h1>
+            <p>
+              {movieDetails.release_date &&
+                `(${movieDetails.release_date.split('-')[0]})`}
+            </p>
+          </div>
+          <p>
+            {movieDetails.vote_average &&
+              `Ocena użytkowników: ${movieDetails.vote_average}`}
+          </p>
+          <p>{movieDetails.overview && `Opis: ${movieDetails.overview}`}</p>
+          <p>
+            {movieDetails.genres &&
+              `Gatunek: ${movieDetails.genres
+                .map(genre => genre.name)
+                .join(', ')}`}
+          </p>
+        </div>
         {/* info info info */} {/* info info info */}
       </div>
-      {/* nav nav nav */} {/* nav nav nav */}
-      <nav>
+      <div>
         <ul>
           <li>
             <Link to={`/movies/${movieId}/cast`}>Zespół aktorski</Link>
@@ -63,8 +66,14 @@ export default function MovieDetails() {
           </li>
         </ul>
         <Outlet />
-      </nav>
-      {/* nav nav nav */} {/* nav nav nav */}
+      </div>
     </div>
   );
 }
+
+MovieDetails.propTypes = {
+  movieId: PropTypes.string,
+  posterPath: PropTypes.string,
+  navigate: PropTypes.func,
+  movieDetails: PropTypes.object,
+};

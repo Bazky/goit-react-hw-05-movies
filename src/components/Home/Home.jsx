@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { apiKey } from 'api/themoviedb';
+import { PropTypes } from 'prop-types';
 
 export const Home = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
-  const apiKey = '718f2a56dca2d55e08ad2e8b7789586d';
 
-  //   fetch fetch fetch
   useEffect(() => {
     axios
-      .get(
-        `https://api.themoviedb.org/3/trending/all/day?api_key=${apiKey}&language=en-US`
-      )
+      .get(`https://api.themoviedb.org/3/trending/all/day?api_key=${apiKey}`)
       .then(response => {
         setTrendingMovies(response.data.results);
       })
@@ -32,4 +30,13 @@ export const Home = () => {
       </ul>
     </div>
   );
+};
+
+Home.propTypes = {
+  trendingMovies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+    })
+  ),
 };

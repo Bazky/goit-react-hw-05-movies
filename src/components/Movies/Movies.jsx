@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { apiKey } from 'api/themoviedb';
+import { PropTypes } from 'prop-types';
 
 export default function Movies() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const apiKey = '718f2a56dca2d55e08ad2e8b7789586d';
 
-  //   fetch fetch fetch
   const searchMovies = async query => {
     try {
       const response = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}&include_adult=false&language=en-US&page=1`
+        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${searchQuery}&include_adult=false&page=1`
       );
       setSearchResults(response.data.results);
       window.history.replaceState(null, '', `/movies?query=${searchQuery}`);
@@ -51,3 +51,12 @@ export default function Movies() {
     </div>
   );
 }
+
+Movies.propTypes = {
+  searchResults: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+    })
+  ),
+};

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { apiKey } from 'api/themoviedb';
 
-export default function Movies() {
+export default function Reviews() {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState([]);
-  const apiKey = '718f2a56dca2d55e08ad2e8b7789586d';
 
-  //   fetch fetch fetch
   useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${apiKey}&language=en-US&page=1`
+        `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${apiKey}&page=1`
       )
       .then(response => {
         setReviews(response.data.results);
